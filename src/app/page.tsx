@@ -250,7 +250,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-16 text-center text-zinc-500 text-sm">
-          <p>Built by Lead Wolf Digital</p>
+          <p>Built by Mike Amis</p>
         </footer>
       </div>
     </main>
