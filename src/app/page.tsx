@@ -83,7 +83,7 @@ export default function Home() {
       {/* Hero */}
       <div className="max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-4 leading-tight bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
             🔥 Landing Page Roast
           </h1>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto">

@@ -54,9 +54,12 @@ async function fetchPageContent(url: string): Promise<string | null> {
       .trim()
       .slice(0, 8000); // Limit content length
     
-    // Extract headings
-    const h1Matches = html.match(/<h1[^>]*>([^<]+)<\/h1>/gi) || [];
-    const h1s = h1Matches.map(h => h.replace(/<[^>]+>/g, '')).join(', ');
+    // Extract headings (handle nested elements inside H1)
+    const h1Matches = html.match(/<h1[^>]*>[\s\S]*?<\/h1>/gi) || [];
+    const h1s = h1Matches
+      .map(h => h.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim())
+      .filter(h => h.length > 0)
+      .join(', ');
     
     // Extract buttons/CTAs
     const buttonMatches = html.match(/<button[^>]*>([^<]+)<\/button>/gi) || [];
