@@ -61,14 +61,19 @@ async function fetchPageContent(url: string): Promise<string | null> {
       .filter(h => h.length > 0)
       .join(', ');
     
-    // Extract buttons/CTAs
-    const buttonMatches = html.match(/<button[^>]*>([^<]+)<\/button>/gi) || [];
-    const linkMatches = html.match(/<a[^>]*class="[^"]*btn[^"]*"[^>]*>([^<]+)<\/a>/gi) || [];
-    const ctas = [...buttonMatches, ...linkMatches]
-      .map(b => b.replace(/<[^>]+>/g, ''))
-      .filter(b => b.trim().length > 0)
-      .slice(0, 10)
-      .join(', ');
+    // Extract buttons/CTAs (expanded detection)
+    const buttonMatches = html.match(/<button[^>]*>[\s\S]*?<\/button>/gi) || [];
+    const btnLinkMatches = html.match(/<a[^>]*class="[^"]*\b(btn|button|cta)[^"]*"[^>]*>[\s\S]*?<\/a>/gi) || [];
+    const roleBtnMatches = html.match(/<[^>]*role="button"[^>]*>[\s\S]*?<\/[^>]+>/gi) || [];
+    // Also catch links with CTA-like text
+    const ctaTextPattern = /<a[^>]*>[\s\S]*?(book|demo|start|get started|sign up|try|free|contact|call|schedule|request)[\s\S]*?<\/a>/gi;
+    const ctaTextMatches = html.match(ctaTextPattern) || [];
+    
+    const allCtas = [...buttonMatches, ...btnLinkMatches, ...roleBtnMatches, ...ctaTextMatches];
+    const ctas = [...new Set(allCtas
+      .map(b => b.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim())
+      .filter(b => b.length > 0 && b.length < 50)
+    )].slice(0, 10).join(', ');
     
     return `
 URL: ${url}
